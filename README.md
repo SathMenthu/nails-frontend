@@ -1,29 +1,16 @@
-# frontend
+# Frontend for Nails Studio management Application
+REST API app with HttpOnly Auth via JWT Token
+## Gives the possibility for:
+- User: registration, login, authorization, authentication 
+- Tariff: adding, editing, deleting new items in the price list (tariff is also generate in frontend from database)
+- Management: allows you to register for a visit, view visits, and view user data
+- Admin: allows you to check the list of visits and confirmation of the visit
 
-## Project setup
-```
-npm install
-```
+Frontend also offer to visit a landing page, tariff page, location page (with dynamic map via leaflet and openstreetmaps), login page, client panel, admin panel
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Technologies that were used: JavaScript, TypeScript, Nest.js, MySQL, Jest, Vue 3 with composition api, Vuex
+#### If you want test please rename config.example.ts to config.ts and fill variables.
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Frontend repo: https://github.com/SathMenthu/nails-backend
+Live demo: http://savine.pl/
