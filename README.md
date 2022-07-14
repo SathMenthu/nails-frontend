@@ -13,5 +13,4 @@ Frontend also offer to visit a landing page, tariff page, location page (with dy
 
 
 Frontend repo: https://github.com/SathMenthu/nails-backend
-
 Live demo: http://savine.pl/
