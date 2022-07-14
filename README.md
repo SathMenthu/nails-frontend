@@ -12,5 +12,6 @@ Frontend also offer to visit a landing page, tariff page, location page (with dy
 #### If you want test please rename config.example.ts to config.ts and fill variables.
 
 
-Frontend repo: https://github.com/SathMenthu/nails-backend
+### Frontend repo: https://github.com/SathMenthu/nails-backend
+
 ###Live demo: http://savine.pl/
