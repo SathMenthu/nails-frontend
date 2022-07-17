@@ -1,22 +1,24 @@
 <template>
-  <div class="location-container">
-    <div class="test">
+  <v-row id="location-row">
+    <v-col>
       <div class="info">
         <h2>Lokalizacja</h2>
-        <p>Salon znajduje się w Jelczu Laskowicach przy ulicy Targowa 1.</p>
-        <p>Przy wejściu do targu, od strony ronda imienia Ofiar Katyńskich.</p>
+        <p>
+          Salon znajduje się w Jelczu Laskowicach przy ulicy Targowa 1. Przy
+          wejściu do targu od strony ronda imienia Ofiar Katyńskich.
+        </p>
+        <p></p>
       </div>
-      <div class="map-border">
-        <div id="mapContainer"></div>
-      </div>
-    </div>
-  </div>
+      <div id="mapContainer"></div
+    ></v-col>
+    <v-col></v-col>
+  </v-row>
 </template>
 
 <script setup>
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, onBeforeMount } from 'vue';
 
 const StreetMap = ref();
 L.Marker.prototype.options.icon = L.icon({
@@ -32,15 +34,25 @@ L.Marker.prototype.options.icon = L.icon({
 onMounted(() => {
   StreetMap.value = L.map('mapContainer').setView([51.0356385, 17.3411357], 16);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(StreetMap.value);
 
   const marker = L.marker([51.0358589, 17.3410257]).addTo(StreetMap.value);
   marker
     .bindPopup(
-      '<strong>Savine Nails Studio </strong><br> 55-220 Jelcz Laskowice  <br> ul. Targowa 1 <br> <strong>Tel: 668 330 396</strong>'
+      '<strong>Savine Nails Studio </strong><br> 55-220 Jelcz Laskowice  <br> ul. Targowa 1 <br> <strong>Tel: 668 330 396</strong>',
     )
     .openPopup();
+});
+
+onBeforeMount(() => {
+  const doc = document.getElementById('app-bgc');
+  doc.classList.add('app-background2');
+  doc.classList.remove('app-background1');
+  doc.classList.remove('app-background3');
+  doc.classList.remove('app-background4');
+  doc.classList.remove('app-background5');
 });
 
 onUnmounted(() => {
@@ -49,50 +61,27 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.location-container {
-  width: 100vw;
-  height: 100vh;
-  background-image: url('@/assets/2bg.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-}
-
-.test {
-  position: absolute;
-  top: 8vh;
-  left: 3vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.map-border {
-  border: 5px dashed rgb(179, 60, 106);
-}
-
 #mapContainer {
-  width: 36vw;
-  height: 36vh;
+  margin: 0;
+  padding: 5px;
+  width: 800px;
+  height: 400px;
+  border: solid rgb(179, 60, 106);
+  margin-left: 10px;
 }
 
-.info :nth-child(1) {
-  text-align: center;
-  letter-spacing: 2px;
+.info {
+  color: white;
+  margin: 50px 0px;
 }
 
 .info h2 {
-  font-weight: 800;
   text-transform: uppercase;
-  font-size: 3rem;
+  text-align: center;
+  font-size: 50px;
 }
 
 .info p {
-  font-size: 2rem;
-}
-
-.info :nth-child(3) {
-  margin-bottom: 5rem;
+  font-size: 28px;
 }
 </style>

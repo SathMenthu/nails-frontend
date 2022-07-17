@@ -1,11 +1,12 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-// @TODO - resovle this problem
-// eslint-disable-next-line import/no-cycle
-import { store } from '@/store';
+import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store/index';
 import MainView from '../views/MainView.vue';
 import TariffView from '../views/TariffView.vue';
+import PanelView from '../views/PanelView.vue';
+import LocationView from '../views/LocationView.vue';
+import AuthView from '../views/AuthView.vue';
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: '/',
     component: MainView,
@@ -16,17 +17,26 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/location',
-    component: () => import(/* webpackChunkName: "login" */ '../views/LocationView.vue'),
+    component: LocationView,
   },
   {
     path: '/login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/LoginView.vue'),
+    component: AuthView,
   },
   {
     path: '/panel',
-    component: () => import(/* webpackChunkName: "secure" */ '../views/PanelView.vue'),
+    component: PanelView,
     meta: {
       requireAuth: true,
+    },
+  },
+  {
+    path: '/admin',
+    component: () =>
+      import(/* webpackChunkName: "admin" */ '../views/AdminPanelView.vue'),
+    meta: {
+      requireAuth: true,
+      requireAdmin: true,
     },
   },
   {
@@ -53,7 +63,7 @@ router.beforeEach(async (to) => {
       await store.dispatch('logout', true);
     }
   } else {
-    to.path ? '/secure' : isLoggedIn && router.push('/secure');
+    to.path ? '/panel' : isLoggedIn && router.push('/panel');
 
     // if user is logged redirect him to dashboard page
   }

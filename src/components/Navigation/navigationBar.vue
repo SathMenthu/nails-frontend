@@ -1,98 +1,123 @@
 <template>
-  <nav>
-    <router-link :to="'/'">Strona Główna </router-link>
-    <router-link :to="'/tariff'">Cennik</router-link>
-    <router-link :to="'/location'">Lokalizacja</router-link>
-    <router-link to="/panel">Panel Klienta<span class="save">[ZAPISZ SIĘ]</span></router-link>
-    <div>
-      <a href="https://www.facebook.com/SavineNails" target="_blank"
-        ><mdicon name="facebook" :size="'2.2rem'" />
-        <p class="blank">fb</p></a
+  <v-app-bar app color="rgba(0, 0, 0, 0.3)">
+    <v-spacer></v-spacer>
+    <v-list-item
+      class="d-flex align-center"
+      active-class="active-element"
+      link
+      v-for="(panel, index) in panels"
+      :key="index"
+      :to="panel.to"
+    >
+      <v-list-item-title class="text-link">{{ panel.text }}</v-list-item-title>
+    </v-list-item>
+    <div v-if="permissions.length > 0">
+      <v-list-item
+        v-if="permissions.filter((permission) => permission === 'ADMIN').length"
+        class="d-flex align-center"
+        active-class="active-element"
+        link
+        :to="'/admin'"
       >
-      <a href="https://www.instagram.com/savine_nails_studio/" target="_blank"
-        ><mdicon name="instagram" :size="'2.2rem'" />
-        <p class="blank">ig</p></a
-      >
+        <v-list-item-title class="text-link">Panel Admina</v-list-item-title>
+      </v-list-item>
     </div>
-    <button v-if="isLoggedIn" @click="logout()">Wyloguj</button>
-  </nav>
-</template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
+    <v-list-item
+      @click="logout()"
+      v-if="isLoggedIn"
+      active-class="active-element"
+    >
+      <v-list-item-title class="text-link">Wyloguj</v-list-item-title>
+    </v-list-item>
+
+    <v-spacer></v-spacer>
+
+    <v-list-item
+      href="https://www.facebook.com/SavineNails"
+      target="_blank"
+      active-class="active-element"
+    >
+      <v-list-item-title>
+        <v-icon color="white">mdi-facebook</v-icon>
+      </v-list-item-title>
+    </v-list-item>
+
+    <v-list-item
+      href="https://www.instagram.com/savine_nails_studio/"
+      target="_blank"
+      active-class="active-element"
+    >
+      <v-list-item-title>
+        <v-icon color="white">mdi-instagram</v-icon>
+      </v-list-item-title>
+    </v-list-item>
+  </v-app-bar>
+</template>
+<script setup>
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
+const permissions = ref([]);
 const isLoggedIn = computed(() => store.getters.isLoggedIn);
+if (isLoggedIn.value) {
+  permissions.value = store.getters.userData.permissions;
+}
+
+const panels = ref([
+  {
+    name: 'mainPage',
+    text: 'Strona Główna',
+    to: '/',
+  },
+  {
+    name: 'tariffPage',
+    text: 'Cennik',
+    to: '/tariff',
+  },
+  {
+    name: 'locationPage',
+    to: '/location',
+    text: 'Lokalizacja',
+  },
+  {
+    name: 'panelPage',
+    to: '/panel',
+    text: 'Panel Klienta',
+  },
+]);
 
 async function logout() {
-  store.dispatch('logout', true);
+  await store.dispatch('logout', true);
 }
+
+watch(isLoggedIn, async () => {
+  await store.dispatch('auth');
+  if (store.getters.userData) {
+    permissions.value = store.getters.userData.permissions;
+  } else {
+    permissions.value = [];
+  }
+});
 </script>
 
-<style scoped>
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  gap: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.7);
-  box-shadow: 0 1px 1px rgb(39, 39, 39);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 7vh;
-  z-index: 100;
+<style>
+.v-list-item {
+  margin: 0px 10px !important;
 }
 
-nav a,
-button {
-  text-decoration: none;
-  margin-right: 1em;
-  font-size: 1.5em;
-  color: var(--color-white);
-  padding: 2rem;
+.text-link {
+  color: white;
+  text-transform: uppercase;
+  font-size: 19px;
 }
 
-button {
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  border: none;
+.active-element {
+  background-color: rgb(245, 245, 245, 0.3);
 }
 
-nav div {
-  position: absolute;
-  top: 1.6rem;
-  right: 0.2rem;
-}
-nav div :first-child {
-  margin: 0;
-  padding: 0;
-}
-
-nav div span {
-  cursor: pointer;
-}
-.save {
-  font-size: 1.2rem;
-  margin-left: 0.5rem;
-  color: #bcffbc;
-}
-.blank {
-  display: none;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-
-@media (max-width: 1600px) {
-  nav div {
-    display: none;
-  }
+.v-list-item:hover {
+  background-color: rgb(245, 245, 245, 0.2);
 }
 </style>

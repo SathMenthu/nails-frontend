@@ -1,40 +1,57 @@
 <template>
-  <ToastBar />
-  <navigationBarVue />
-  <router-view />
+  <v-app id="app-bgc" class="app-background1">
+    <AlertHelperVue />
+    <NavigationBar />
+    <v-main>
+      <v-container class="fill-height">
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
-<script setup lang="ts">
-import navigationBarVue from '@/components/Navigation/navigationBar.vue';
-import ToastBar from './components/Toast/toastBar.vue';
+<script setup>
+import NavigationBar from './components/Navigation/navigationBar.vue';
+import AlertHelperVue from './components/Alerts/alertHelper.vue';
 </script>
 
 <style>
 :root {
-  --color-white: #fff;
-  --background-color-success: rgba(30, 170, 30, 0.9);
-  --background-color-warning: rgba(255, 153, 0, 0.6);
-  --background-color-error: rgba(209, 36, 36, 0.9);
+  --v-theme-error: 'blue';
+}
+
+.app-background1 {
+  background-image: url('@/assets/1bg.jpg') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.app-background2 {
+  background-image: url('@/assets/2bg.jpg') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.app-background3 {
+  background-image: url('@/assets/3bg.jpg') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.app-background4 {
+  background-image: url('@/assets/4bg.jpg') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 html {
-  font-size: 16px;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+  font-family: 'Lora' !important;
 }
 
-body {
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  box-sizing: border-box;
-  font-family: 'Lora', sans-serif;
-  color: var(--color-white);
-  background-color: black;
-}
-
-.spacer {
-  height: 1px;
+.v-row {
   width: 100%;
-  background-color: white;
-  margin-bottom: 1rem;
 }
 </style>

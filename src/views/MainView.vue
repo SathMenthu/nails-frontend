@@ -1,80 +1,82 @@
 <template>
-  <div class="container-main" id="home">
-    <section class="title">
-      <img src="@/assets/logo_white.png" alt="savine logo" />
-    </section>
-    <section class="main-quote">
-      <div>
-        <h1>Twoje paznokcie są odbiciem ciebie samej.</h1>
-        <p>A naszą pasją.</p>
+  <v-row>
+    <v-col> <v-img src="@/assets/logo_white.png" class="logo"></v-img></v-col>
+    <v-spacer></v-spacer>
+    <v-col align-self="end">
+      <div class="slogan">
+        <p>Twoje paznokcie są odbiciem ciebie samej.</p>
+        <p>
+          A naszą pasją.
+          <button @click="$router.push('/panel')" id="save-me-button">
+            Zapisz się już teraz
+          </button>
+        </p>
       </div>
-      <router-link to="/panel" class="button">Zapisz się już teraz</router-link>
-    </section>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
-<script setup lang="ts"></script>
+<script setup>
+import { onBeforeMount } from 'vue';
+
+onBeforeMount(() => {
+  const doc = document.getElementById('app-bgc');
+  doc.classList.add('app-background1');
+  doc.classList.remove('app-background2');
+  doc.classList.remove('app-background3');
+  doc.classList.remove('app-background4');
+  doc.classList.remove('app-background5');
+});
+</script>
 
 <style scoped>
-.container-main {
-  height: 100vh;
-  position: relative;
-  background-image: url('@/assets/1bg.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+.v-row {
+  height: 100%;
+}
+.logo {
+  width: 700px;
+  margin-top: 80px;
 }
 
-/* logo */
-
-.container-main .title {
-  position: absolute;
-  top: 19vh;
-  left: 2vw;
+.slogan {
+  margin-bottom: 30px;
+  float: right;
+  color: white;
 }
 
-/* QUOTE SECTION */
-
-.container-main .main-quote {
-  position: absolute;
-  top: 76vh;
-  right: 0vw;
+.slogan :nth-child(1) {
+  white-space: nowrap;
+  font-size: 30px;
+  font-weight: 100;
+  text-shadow: 3px 1px black;
+  text-transform: uppercase;
 }
 
-.container-main .main-quote div {
-  position: relative;
-  padding: 0.1rem 50px;
-}
-
-.container-main .main-quote h1 {
-  font-size: 3rem;
+.slogan :nth-child(2) {
+  display: block;
+  font-size: 20px;
   font-weight: 400;
-  margin-bottom: 0.2rem;
+  font-style: italic !important;
+  text-shadow: 3px 1px black;
+  text-transform: none;
+  width: auto;
 }
 
-.container-main .main-quote p {
-  font-size: 1.5rem;
-  font-weight: 400;
-  font-style: italic;
-  margin-top: 0.2rem;
-}
-
-.container-main .main-quote .button {
-  position: absolute;
-  bottom: -0.6rem;
-  right: 5.5rem;
-  display: inline-block;
+#save-me-button {
+  float: right;
+  padding: 10px;
   border: 1px solid #bcffbc;
+  text-shadow: 3px 1px black;
   background: none;
   color: #bcffbc;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  padding: 18px 40px;
+  font-size: 20px;
   letter-spacing: 1px;
   font-weight: 700;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  transition: all 0.3s;
   cursor: pointer;
-  text-decoration: none;
+  text-transform: uppercase;
+}
+
+#save-me-button:hover {
+  background: #bcffbc17;
 }
 </style>

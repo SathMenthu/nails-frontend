@@ -1,127 +1,150 @@
 <template>
-  <div class="editItemModal">
-    <form @submit.prevent="addTariff()">
-      <div class="label-container">
-        <span>Nazwa: </span>
-        <label for="name">
-          <input type="name" v-model="currentTariff.name" placeholder="Nazwa" />
-        </label>
-      </div>
-      <div class="label-container">
-        <span>Kategoria </span>
-        <label for="categories">
-          <select v-model="currentTariff.category">
-            <option value="STYLING">Stylizacja</option>
-            <option value="CARE">Pielęgnacja</option>
-          </select>
-        </label>
-      </div>
-      <div class="label-container">
-        <span>Cena: </span>
-        <label for="price">
-          <input type="number" v-model="currentTariff.price" placeholder="Cena" />
-        </label>
-      </div>
-      <div class="label-container">
-        <span>Priorytet: </span>
-        <label for="priority">
-          <input type="number" v-model="currentTariff.priority" placeholder="Priorytet" />
-        </label>
-      </div>
-      <div class="button-box">
-        <button type="submit">Dodaj</button
-        ><button @click="$emit('cancel')" class="cancel">Anuluj</button>
-      </div>
-    </form>
-  </div>
+  <v-dialog v-if="show" v-model="show" max-width="700px" persistent>
+    <v-card>
+      <v-card-title>Dodawanie Nowej Pozycji Do Cennika</v-card-title>
+      <v-card-actions>
+        <v-form
+          v-model="valid"
+          lazy-validation
+          ref="tariffForm"
+          class="tariff-form"
+        >
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  prepend-inner-icon="mdi-pencil-box-outline"
+                  v-model="currentTariff.name"
+                  type="text"
+                  label="Nazwa"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-select
+                  prepend-inner-icon="mdi-pencil-box-multiple-outline"
+                  :items="tariffStyles"
+                  label="Rodzaj Usługi"
+                  v-model="currentTariff.category"
+                >
+                </v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  type="number"
+                  prepend-inner-icon="mdi-shield-edit-outline"
+                  v-model="currentTariff.priority"
+                  label="Priorytet"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-card-actions>
+      <v-card-actions class="pb-2 pb-5">
+        <v-row>
+          <v-col align="center" justify="center">
+            <v-btn width="50%" class="success" @click="addTariff()"
+              >Dodaj</v-btn
+            ></v-col
+          >
+          <v-col align="center" justify="center">
+            <v-btn width="50%" class="error" @click.stop="show = false"
+              >Anuluj</v-btn
+            ></v-col
+          >
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script setup lang="ts">
-import { Tariff, Categories } from '@/types';
-import { ref } from 'vue';
+<script setup>
 import { useStore } from 'vuex';
+import { ref, defineProps, computed, defineEmits } from 'vue';
 
 const store = useStore();
+const props = defineProps(['visible']);
+const emit = defineEmits(['closeDialog']);
 
-const currentTariff = ref<Tariff>({
+const currentTariff = ref({
   id: '',
   name: '',
   price: '',
-  category: Categories.STYLING,
+  category: 'STYLING',
   priority: 0,
 });
+
+const valid = ref();
+const tariffStyles = ref(['STYLING', 'CARE']);
 
 function addTariff() {
   store.dispatch('addTariff', currentTariff.value);
 }
+
+const show = computed({
+  get() {
+    return props.visible;
+  },
+  set(newValue) {
+    if (!newValue) {
+      emit('closeDialog');
+    }
+  },
+});
 </script>
 
 <style scoped>
-.editItemModal {
-  color: white;
+.v-card {
+  background-color: rgb(63, 16, 24);
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  width: 700px;
+}
+
+.card-row form .v-col {
+  margin-top: 10px;
+}
+
+.v-card-title {
+  height: 50px;
   text-transform: uppercase;
-  font-weight: bold;
-  background-color: rgba(55, 172, 226);
+  background-color: rgb(139, 61, 74);
+  box-shadow: -1px -1px 5px rgb(0, 11, 14), 1px -1px 5px rgba(0, 11, 14, 1),
+    -1px 1px 5px rgba(0, 11, 14, 1), 1px 1px 5px rgba(0, 11, 14, 1);
 }
 
-form:nth-child(1) {
-  text-align: center;
-}
-
-.editItemModal .label-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.editItemModal .label-container {
-  font-size: 2rem;
-  padding: 1rem;
-}
-
-.editItemModal .label-container input {
-  height: 3rem;
-  color: #370d26;
-  padding: 0.8rem 3rem 0.8rem 1rem;
-  letter-spacing: 1px;
-  outline: none;
-  border: none;
-  font-size: 1.3rem;
-  border: solid 1px #131212;
-}
-
-button {
-  margin-top: 10vh;
-  padding: 1rem 8rem;
-  border-radius: 1.2rem;
-  border: 1px solid black;
-  background-color: rgb(10, 155, 65);
-  color: white;
-  font-size: 0.9rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-label :nth-child(1) {
-  box-sizing: border-box;
-  width: 18.5vw;
-  height: 5vh;
-}
-
-.button-box {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 4rem;
-}
-
-.cancel {
-  background-color: rgb(252, 69, 69);
-  color: white;
+.v-card-title p {
+  margin-bottom: 0;
 }
 
 select {
-  font-size: 1.5rem;
+  background-color: white;
+  box-shadow: -1px -1px 5px rgb(0, 11, 14), 1px -1px 5px rgba(0, 11, 14, 1),
+    -1px 1px 5px rgba(0, 11, 14, 1), 1px 1px 5px rgba(0, 11, 14, 1);
+  padding: 5px;
+  width: 100%;
+}
+
+.v-btn {
+  padding: 10px;
+  background-color: rgb(139, 61, 74);
+  text-shadow: -1px -1px 3px rgb(0, 11, 14), 1px -1px 3px rgba(0, 11, 14, 1),
+    -1px 1px 5px rgba(0, 11, 14, 1), 1px 1px 5px rgba(0, 11, 14, 1);
+  box-shadow: -1px -1px 3px rgb(0, 11, 14), 1px -1px 3px rgba(0, 11, 14, 1),
+    -1px 1px 3px rgba(0, 11, 14, 1), 1px 1px 3px rgba(0, 11, 14, 1);
+}
+
+.v-btn:hover {
+  background-color: rgba(139, 61, 74, 0.322);
+}
+
+.v-form {
+  width: 100%;
 }
 </style>
